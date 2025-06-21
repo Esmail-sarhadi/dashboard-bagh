@@ -1602,51 +1602,49 @@
        }
 
        function createDailyStatusChart() {
-           // Group data by day and calculate daily uptime
-           const dailyData = {};
-
-           filteredData.forEach(row => {
-               if (!row['Timestamp']) return;
-
-               const date = new Date(row['Timestamp']).toDateString();
-               if (!dailyData[date]) {
-                   dailyData[date] = { total: 0, online: 0 };
-               }
-
-               dailyData[date].total++;
-               if (row['Status'] && row['Status'].toLowerCase() === 'online') {
-                   dailyData[date].online++;
-               }
-           });
-
-           const dates = Object.keys(dailyData).sort((a, b) => new Date(a) - new Date(b));
-           const uptimePercentages = dates.map(date => {
-               const uptimePercentages = dates.map(date => {
-           const data = dailyData[date];
-           return data.total > 0 ? (data.online / data.total) * 100 : 0;
-       });
-
-       const trace = {
-           x: dates.map(date => new Date(date).toLocaleDateString('fa-IR')),
-           y: uptimePercentages,
-           type: 'scatter',
-           mode: 'lines+markers',
-           line: { color: '#667eea', width: 3 },
-           marker: { size: 8, color: '#667eea' },
-           fill: 'tonexty',
-           fillcolor: 'rgba(102, 126, 234, 0.1)',
-           name: 'آپتایم روزانه'
-       };
-
-       const layout = {
-           xaxis: { title: 'تاریخ' },
-           yaxis: { title: 'درصد آپتایم', range: [0, 100] },
-           height: 350,
-           margin: { t: 20, b: 50, l: 50, r: 20 }
-       };
-
-       Plotly.newPlot('dailyStatusChart', [trace], layout, {responsive: true});
-   }
+        const dailyData = {};
+        
+        filteredData.forEach(row => {
+            if (!row['Timestamp']) return;
+            
+            const date = new Date(row['Timestamp']).toDateString();
+            if (!dailyData[date]) {
+                dailyData[date] = { total: 0, online: 0 };
+            }
+            
+            dailyData[date].total++;
+            if (row['Status'] && row['Status'].toLowerCase() === 'online') {
+                dailyData[date].online++;
+            }
+        });
+    
+        const dates = Object.keys(dailyData).sort((a, b) => new Date(a) - new Date(b));
+        const uptimePercentages = dates.map(date => {
+            const data = dailyData[date];
+            return data.total > 0 ? (data.online / data.total) * 100 : 0;
+        });
+    
+        const trace = {
+            x: dates.map(date => new Date(date).toLocaleDateString('fa-IR')),
+            y: uptimePercentages,
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#667eea', width: 3 },
+            marker: { size: 8, color: '#667eea' },
+            fill: 'tonexty',
+            fillcolor: 'rgba(102, 126, 234, 0.1)',
+            name: 'آپتایم روزانه'
+        };
+    
+        const layout = {
+            xaxis: { title: 'تاریخ' },
+            yaxis: { title: 'درصد آپتایم', range: [0, 100] },
+            height: 350,
+            margin: { t: 20, b: 50, l: 50, r: 20 }
+        };
+    
+        Plotly.newPlot('dailyStatusChart', [trace], layout, {responsive: true});
+    }
 
    function createDailyUptimeChart() {
        // Calculate uptime for each device by day
